@@ -1,0 +1,52 @@
+/*
+	The inline "likes" before/after content
+	---------------------------------------
+*/
+
+	a.likeThis
+	{
+		padding: 0 20px;
+		display: inline-block;
+		background: transparent url( 'images/heart_1_light.png' ) no-repeat 0 2px;
+	}
+
+	a.likeThis.done,
+	a.likeThis:hover
+	{
+		background-image: url( 'images/heart_1_dark.png' );
+	}
+
+
+/*
+	The Most Liked Widget
+	---------------------
+*/
+
+	.themeists_likethis_list li
+	{
+		overflow: hidden;
+		clear: both;
+	}
+
+		.themeists_likethis_list li
+		{
+			position: relative;
+		}
+
+			.themeists_likethis_list li a
+			{
+				display: block;
+				max-width: 90%;
+			}
+
+				.themeists_likethis_list li span.likes_number
+				{
+					position: absolute;
+					right: 0;
+					top: 0;
+					display: block;
+					padding: 0 0 0 20px;
+					background: transparent url( 'images/heart_1_light.png' ) no-repeat 0 0;
+					font-size: 0.85em;
+					color: rgb(144,144,144);
+				}
