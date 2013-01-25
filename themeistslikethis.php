@@ -80,6 +80,9 @@ if( !class_exists( 'ThemeistsLikeThis' ) ):
 			add_action( 'wp_ajax_themeists_like_this_vote', array( &$this, 'my_user_vote' ) );
 			add_action( 'wp_ajax_nopriv_themeists_like_this_vote', array( &$this, 'my_user_vote' ) );
 
+			//we need to add a filter to plugins_url as we use symlinks in our dev setup
+			add_filter( 'plugins_url', array( &$this, 'local_dev_symlink_plugins_url_fix' ), 10, 3 );
+
 			if( $this->using_themeists_theme )
 			{
 				add_action( 'of_set_options_in_advanced_page_end', 	array( &$this, 'add_options_to_themeists_options_panel' ), 10, 1 );
@@ -117,7 +120,7 @@ if( !class_exists( 'ThemeistsLikeThis' ) ):
 
 			$data = get_post_meta( $post_id, '_likes' );
 			
-			if( !is_numeric( $data[0] ) )
+			if( array_key_exists( 0, $data ) && !is_numeric( $data[0] ) )
 			{
 				
 				$data[0] = 0;
@@ -126,7 +129,10 @@ if( !class_exists( 'ThemeistsLikeThis' ) ):
 
 			}
 			
-			return $data[0];
+			if( array_key_exists( 0, $data ) )
+				return $data[0];
+			else
+				return 0;
 
 		}/* likeThis */
 
@@ -353,6 +359,27 @@ if( !class_exists( 'ThemeistsLikeThis' ) ):
 			do_action( 'themeists_likethis_after_customisation' );
 
 		}/* add_options_to_themeists_options_panel() */
+
+
+
+		/**
+		 * Edit the plugins_url() url to be appropriate for this widget (we use symlinks on local dev)
+		 *
+		 * @author Richard Tape
+		 * @package Chemistry
+		 * @since 0.7
+		 */
+		
+		function local_dev_symlink_plugins_url_fix( $url, $path, $plugin )
+		{
+
+			// Do it only for this plugin
+			if ( strstr( $plugin, basename( __FILE__ ) ) )
+				return str_replace( dirname( __FILE__ ), '/' . basename( dirname( $plugin ) ), $url );
+
+			return $url;
+
+		}/* local_dev_symlink_plugins_url_fix() */
 		
 		
 
